@@ -1,0 +1,151 @@
+<Window x:Class="CascadeLauncher.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sign in"
+        Width="460" Height="380"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        FontFamily="{StaticResource UiFont}"
+        Foreground="{StaticResource TextBrush}">
+
+    <Border CornerRadius="14"
+            Background="{StaticResource WindowBackdropBrush}"
+            Margin="12">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="22" ShadowDepth="0" Opacity="0.55" Color="Black"/>
+        </Border.Effect>
+
+        <Grid Margin="28,22,28,22">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Sign in"
+                           FontSize="22"
+                           FontWeight="Light"
+                           Foreground="{StaticResource TextBrush}"/>
+                <TextBlock Text="Sign in with the Microsoft account that owns Minecraft Java Edition."
+                           Foreground="{StaticResource TextMutedBrush}"
+                           FontSize="12" Margin="0,2,0,0"
+                           TextWrapping="Wrap"/>
+                <Border Height="1" Background="{StaticResource DividerBrush}" Margin="0,12,0,0"/>
+            </StackPanel>
+
+            <!-- Body changes shape depending on flow state. -->
+            <Grid Grid.Row="1" Margin="0,18,0,0">
+                <!-- Initial choice -->
+                <StackPanel x:Name="ChoicePanel" VerticalAlignment="Center">
+                    <Button x:Name="BtnMicrosoft"
+                            Content="Sign in with Microsoft"
+                            Style="{StaticResource LaunchButton}"
+                            FontSize="15"
+                            Padding="22,10"
+                            HorizontalAlignment="Stretch"
+                            Click="BtnMicrosoft_Click"/>
+
+                    <TextBlock TextWrapping="Wrap"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="10.5"
+                               Margin="0,16,0,0"
+                               TextAlignment="Center">
+                        Cascade Launcher is not affiliated with, approved by, or endorsed by Mojang Studios or Microsoft.
+                        A genuine Microsoft account that owns Minecraft Java Edition is required.
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- One-time setup: paste the Azure client ID. -->
+                <StackPanel x:Name="SetupPanel" Visibility="Collapsed" VerticalAlignment="Center">
+                    <TextBlock Text="Microsoft sign-in needs an Azure app ID."
+                               Foreground="{StaticResource TextBrush}"
+                               FontWeight="SemiBold"
+                               FontSize="14"/>
+                    <TextBlock TextWrapping="Wrap"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="11"
+                               Margin="0,6,0,12">
+                        Paste the Application (client) ID from your Azure app registration.
+                        Free Azure or M365 Developer Program tenant required — see README.
+                    </TextBlock>
+
+                    <TextBox x:Name="ClientIdBox"
+                             Padding="10,8"
+                             FontFamily="Consolas"
+                             FontSize="13"
+                             Background="{StaticResource PanelBrush}"
+                             Foreground="{StaticResource TextBrush}"
+                             BorderBrush="{StaticResource PanelHighlightBrush}"
+                             BorderThickness="1"
+                             CaretBrush="{StaticResource AccentBrush}"
+                             Tag="00000000-0000-0000-0000-000000000000"/>
+                    <TextBlock x:Name="ClientIdError"
+                               Foreground="{StaticResource AccentBrush}"
+                               FontSize="11"
+                               Margin="0,6,0,0"
+                               Visibility="Collapsed"/>
+
+                    <Button Content="Save and continue"
+                            Style="{StaticResource LaunchButton}"
+                            FontSize="14"
+                            Padding="20,8"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,12,0,0"
+                            Click="BtnSaveClientId_Click"/>
+                </StackPanel>
+
+                <!-- Device-code wait screen -->
+                <StackPanel x:Name="DevicePanel" Visibility="Collapsed" VerticalAlignment="Center">
+                    <TextBlock Text="To finish signing in, open this URL on any device:"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               TextWrapping="Wrap"
+                               FontSize="12"/>
+                    <TextBlock x:Name="DeviceUrl"
+                               Foreground="{StaticResource AccentBrush}"
+                               FontSize="14" FontWeight="SemiBold"
+                               Margin="0,4,0,12"
+                               Cursor="Hand"
+                               MouseLeftButtonUp="DeviceUrl_Click"/>
+
+                    <TextBlock Text="and enter this code:"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="12"/>
+                    <Border Background="{StaticResource PanelBrush}"
+                            CornerRadius="8"
+                            Padding="14,8"
+                            Margin="0,4,0,0"
+                            HorizontalAlignment="Left">
+                        <TextBlock x:Name="DeviceCode"
+                                   FontSize="22"
+                                   FontFamily="Consolas"
+                                   Foreground="{StaticResource TextBrush}"/>
+                    </Border>
+
+                    <TextBlock x:Name="DeviceStatus"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="11"
+                               Margin="0,14,0,0"
+                               TextWrapping="Wrap"
+                               Text="Waiting for sign-in…"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Footer with cancel -->
+            <Grid Grid.Row="2" Margin="0,12,0,0">
+                <Button x:Name="BtnCancel"
+                        Content="Cancel"
+                        HorizontalAlignment="Right"
+                        Background="Transparent"
+                        Foreground="{StaticResource TextMutedBrush}"
+                        BorderThickness="0"
+                        Padding="14,6"
+                        Cursor="Hand"
+                        Click="BtnCancel_Click"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
