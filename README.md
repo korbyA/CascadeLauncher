@@ -144,30 +144,6 @@ The launcher does not have an offline / unauthenticated launch path. Sign-in
 through Microsoft is required and `/minecraft/profile` must return a valid
 license before the game starts.
 
-## Build
-
-Requires **.NET 10 SDK** (verified with `10.0.201`).
-
-```powershell
-.\build.ps1                   # builds publish\CascadeLauncher.exe
-.\build.ps1 -Clean            # nukes bin/obj/publish first
-.\build.ps1 -Configuration Debug
-```
-
-Or by hand:
-
-```powershell
-dotnet publish CascadeLauncher.csproj `
-  -c Release -r win-x64 `
-  --self-contained true `
-  -p:PublishSingleFile=true `
-  -p:EnableCompressionInSingleFile=true `
-  -o publish
-```
-
-The output `CascadeLauncher.exe` bundles the .NET 10 runtime — no install
-required on the target machine.
-
 ## Architecture
 
 ```
