@@ -93,56 +93,10 @@ runtime/
   cache/forge/          cached Forge installer jar
   auth/
     profile.json        active Minecraft profile (token + uuid)
-    client_id.txt       Azure AD client id (you must create this — see below)
+    client_id.txt       optional per-machine override of the Azure AD client id
 logs/
   launcher.log          rolling launcher log (~1MB cap)
 ```
-
-## Microsoft account login
-
-Mojang account auth was retired, so login uses Microsoft's device-code OAuth
-flow → Xbox Live → XSTS → Minecraft Services. **You must register your own
-Azure AD app** and write its Application (client) ID to
-`runtime/auth/client_id.txt` before online sign-in will work.
-
-> **Microsoft policy change (2024+):** the "create an app outside a directory"
-> shortcut was deprecated. Azure now refuses with:
-> *"The ability to create applications outside of a directory has been deprecated.
-> You may get a new directory by joining the M365 Developer Program or signing up for Azure."*
->
-> You need a tenant. Pick one of:
->
-> - **Free Azure account** at <https://azure.microsoft.com/free> — the app
->   registration itself costs nothing, you just need an Azure tenant to host it.
->   Card required for verification but no charges occur for app registration.
-> - **Microsoft 365 Developer Program** at
->   <https://developer.microsoft.com/microsoft-365/dev-program> — gives you a
->   free dev tenant, no card required.
-
-Then:
-
-1. <https://entra.microsoft.com> → Applications → App registrations → **New registration**.
-2. Name it anything ("Cascade Launcher").
-3. Supported account types: **Personal Microsoft accounts only** (or "any org + personal").
-4. Skip the redirect URI — we use device code flow.
-5. After creating, open **Authentication** and toggle "Allow public client flows" → **Yes**.
-6. Open **API permissions** → **Add a permission** → search "Xbox Live" →
-   **Delegated** → check `XboxLive.signin`.
-7. Copy the **Application (client) ID** from the overview page.
-8. Either paste it into [Configuration.cs](Configuration.cs)
-   (`EmbeddedAzureClientId`) and rebuild — every distributed copy of the exe
-   will use it — **or** drop it into `runtime/auth/client_id.txt` for a single
-   machine.
-9. **Submit the client ID for Mojang review** at
-   <https://aka.ms/mce-reviewappid>. This is mandatory: Mojang gates the
-   `login_with_xbox` endpoint behind an allowlist and a brand-new Azure app
-   will hit `403 Invalid app registration` until Mojang approves it
-   (typically a few days to a couple weeks). The launcher detects this case
-   and surfaces the same link in-app.
-
-The launcher does not have an offline / unauthenticated launch path. Sign-in
-through Microsoft is required and `/minecraft/profile` must return a valid
-license before the game starts.
 
 ## Architecture
 
